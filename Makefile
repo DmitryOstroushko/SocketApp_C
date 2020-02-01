@@ -6,16 +6,16 @@
 #    By: clianne <clianne@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/04 05:29:44 by clianne           #+#    #+#              #
-#    Updated: 2020/02/01 18:13:20 by clianne          ###   ########.fr        #
+#    Updated: 2020/02/01 22:59:41 by clianne          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME1 = server
 NAME2 = client
 MAKE = make
-FLAGS = -pthread
-
-SRCS = ip_addr.c strs.c
+FLAGS = -Wall -g3 -pthread
+# FLAGS = -Wall -g3 -fsanitize=address -pthread
+SRCS = ip_addr.c str_lib.c
 
 SRCS1 = $(SRCS) server_func.c socketServer.c
 SRCS2 = $(SRCS) socketClient.c

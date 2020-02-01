@@ -38,11 +38,18 @@ typedef struct		s_client_socket
 	struct sockaddr_in	address;
 }					t_client_socket;
 
-typedef struct		s_connect_options
+typedef struct		s_client_connect_options
 {
 	int				port;
+	char			*ip;
+	int				socket_fd;
+	int				connection;
+	char			name[NAME_LEN];
+	struct sockaddr_in	server_address;
+	pthread_t		send_msg_thread;
+	pthread_t		recv_msg_thread;
 	struct hostent	*server;
-}					t_connect_options;
+}					t_client_connect_options;
 
 t_client_socket			*clients[MAX_CLIENTS];
 

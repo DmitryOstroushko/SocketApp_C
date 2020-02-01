@@ -69,7 +69,7 @@ int			main(int gc, char **gv)
 	t_server_socket		*server;
 	struct sockaddr_in	client_address;
 	int					connect_fd;
-	pthread_t 			tid;
+	pthread_t 			thread_id;
 
 	connect_fd = 0;
 
@@ -127,11 +127,12 @@ int			main(int gc, char **gv)
 		client->socket_fd = connect_fd;
 		client->id = uid++;
 		server_queue_add(client);
-		pthread_create(&tid, NULL, &server_handle_client, (void *)client);
+		pthread_create(&thread_id, NULL, &server_handle_client, (void *)client);
 
 		sleep(1);
 	}
 
+	close(server->listen_fd);
 
 	return EXIT_SUCCESS;
 }
