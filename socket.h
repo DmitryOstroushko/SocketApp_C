@@ -15,7 +15,7 @@
 # include <string.h>
 # include <signal.h>
 
-extern pthread_mutex_t clients_mutex;
+extern pthread_mutex_t	clients_mutex;
 
 # define BUF_SIZE 1024
 # define MAX_CLIENTS 100
@@ -27,33 +27,32 @@ typedef struct		s_server_socket
 	int				port;
 	int				option;
 	int				listen_fd;
-	int				connect_fd;
-	pthread_t		t_id;
 	struct sockaddr_in	server_address;
-	struct sockaddr_in	client_address;
 }					t_server_socket;
 
 typedef struct		s_client_socket
 {
-	struct sockaddr_in	address;
+	int				id;
 	int				socket_fd;
-	int				uid;
 	char			name[NAME_LEN];
+	struct sockaddr_in	address;
 }					t_client_socket;
 
 typedef struct		s_connect_options
 {
 	int				port;
 	struct hostent	*server;
-	int				max_client; // to read fron server args
 }					t_connect_options;
 
+t_client_socket			*clients[MAX_CLIENTS];
 
 void		ret_error(char *msg);
 
 void		server_options_fill(t_server_socket *socket, char *port);
-void		server_queue_add(t_client_socket *client, t_client_socket	*clients[MAX_CLIENTS]);
-void		server_queue_remove(int client_id, t_client_socket	*clients[MAX_CLIENTS]);
+void		server_queue_add(t_client_socket *client);
+void		server_queue_remove(int client_id);
+void		server_send_msg(char *msg, int client_id);
+void		*server_handle_client(void *arg);
 
 void		ip_address_print(struct sockaddr_in address);
 
