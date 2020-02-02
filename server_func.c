@@ -19,6 +19,8 @@ void		server_queue_add(t_client_socket *client)
 		if (!clients[idx])
 		{
 			clients[idx] = client;
+			for (int jdx = 0; jdx < 3; jdx++)
+				bzero(clients[idx]->seq[jdx].seq_name, 4);
 			break ;
 		}
 	}
@@ -48,10 +50,36 @@ void		server_send_msg(char *msg, int client_id)
 		{
 			if (write(clients[idx]->socket_fd, msg, strlen(msg)) < 0)
 			{
-				printf("ERROR: failed writing to descriptor");
+				printf("ERROR: failed writing to descriptor\n");
 				break ;
 			}
 		}
 	}
 	pthread_mutex_unlock(&clients_mutex);
+}
+
+void		server_add_seq_to_cleint(t_client_socket *client, char **words)
+{
+	int		idx;
+	int		is_added;
+
+	is_added = 0;
+	for (idx = 0; idx < 3; idx++)
+		if (!strcmp(client->seq[idx].seq_name, words[0]))
+		{
+			client->seq[idx].n_current = atoi(words[1]);
+			client->seq[idx].step = atoi(words[2]);
+			is_added = 1;
+			break ;
+		}
+	if (!is_added)
+	{
+		for (idx = 0; idx < 3; idx++)
+			if (!strlen(client->seq[idx].seq_name))
+			{
+				client->seq[idx].n_current = atoi(words[1]);
+				client->seq[idx].step = atoi(words[2]);
+				break ;
+			}
+	}
 }

@@ -2,7 +2,7 @@
 
 void		ft_str_overwrite_stdout(void)
 {
-	printf("\r%s", "> ");
+	printf("\r");
 	fflush(stdout);
 }
 

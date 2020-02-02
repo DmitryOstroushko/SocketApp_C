@@ -2,20 +2,22 @@
 #include "socket.h"
 
 static _Atomic unsigned int client_count = 0;
-static int uid = 10;
+static int uid = 1;
 
 pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void		*server_handle_client(void *arg)
 {
 	char			buffer[BUF_SIZE];
-	char			name[NAME_LEN];
+//	char			name[NAME_LEN];
 	int				to_finish;
 	t_client_socket *client;
+	char			**words;
 
 	to_finish = 0;
 	client_count++;
 	client = (t_client_socket *)arg;
+/* a block about client name
 	if (recv(client->socket_fd, name, NAME_LEN, 0) <= 0 ||
 		strlen(name) < 2 || strlen(name) >= NAME_LEN - 1)
 	{
@@ -29,8 +31,8 @@ void		*server_handle_client(void *arg)
 		printf("%s", buffer);
 		server_send_msg(buffer, client->id);
 	}
+*/
 	bzero(buffer, BUF_SIZE);
-
 	while (1)
 	{
 		if (to_finish)
@@ -38,14 +40,23 @@ void		*server_handle_client(void *arg)
 		int recieve = recv(client->socket_fd, buffer, BUF_SIZE, 0);
 		if (recieve > 0)
 		{
+			words = ft_strsplit(buffer, ' ');
+			printf("Has recieved <%s %s %s> from ", words[0], words[1], words[2]);
+			ip_address_print(client->address);
+			printf(" #%d.", client->id);
+			ft_str_overwrite_stdout();
+			server_add_seq_to_cleint(client, words);
 			server_send_msg(buffer, client->id);
 			ft_str_trim_eol(buffer, strlen(buffer));
-			printf("%s -> %s", buffer, client->name);
+			ft_strlist_del(words);
+//			printf("%s -> %s", buffer, client->name);
 		}
-		else if (recieve == 0 || !strcmp(buffer, "exit"))
+		else if (recieve == 0)
 		{
-			sprintf(buffer, "%s has disconnected from the server\n", client->name);
-			printf("%s\n", buffer);
+			ip_address_print(client->address);
+			printf(" #%d has disconnected from the server.\n", client->id);
+//			sprintf(buffer, "%s has disconnected from the server\n", client->address.sin_addr);
+//			printf("%s\n", buffer);
 			server_send_msg(buffer, client->id);
 			to_finish = 1;
 		}

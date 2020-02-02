@@ -21,6 +21,13 @@ extern pthread_mutex_t	clients_mutex;
 # define MAX_CLIENTS 100
 # define NAME_LEN 32
 
+typedef struct 		s_seq
+{
+	char			seq_name[4];
+	unsigned long	n_current;
+	unsigned long	step;
+}					t_seq;
+
 typedef struct		s_server_socket
 {
 	char			*ip;
@@ -35,6 +42,7 @@ typedef struct		s_client_socket
 	int				id;
 	int				socket_fd;
 	char			name[NAME_LEN];
+	t_seq			seq[3];
 	struct sockaddr_in	address;
 }					t_client_socket;
 
@@ -60,6 +68,7 @@ void		server_queue_add(t_client_socket *client);
 void		server_queue_remove(int client_id);
 void		server_send_msg(char *msg, int client_id);
 void		*server_handle_client(void *arg);
+void		server_add_seq_to_cleint(t_client_socket *client, char **words);
 
 void		ip_address_print(struct sockaddr_in address);
 
