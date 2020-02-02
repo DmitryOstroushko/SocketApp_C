@@ -74,7 +74,7 @@ int			main(int gc, char **gv)
 {
 	if (gc < 3)
 	{
-		printf("usage of %s: <hostname> <port>\n", gv[0]);
+		printf("usage of %s: <host_IP_address> <port>\n", gv[0]);
 		exit(0);
 	}
 
