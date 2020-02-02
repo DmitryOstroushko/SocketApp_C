@@ -24,10 +24,9 @@ void		recv_msg_handler()
 	while (1)
 	{
 		int recieve = recv(client_socket.socket_fd, msg, BUF_SIZE, 0);
-		printf("recieve = %d\n", recieve);
 		if (recieve > 0)
 		{
-			printf("Has recieved <%s>\n", msg);
+			printf("%s", msg);
 			ft_str_overwrite_stdout();
 		}
 		else if (recieve == 0)
@@ -59,7 +58,7 @@ void		send_msg_handler()
 					(atoi(words[1]) != 0) && (atoi(words[2]) != 0));
 		if (is_send)
 		{
-			printf("Has sent <%s>\n", buffer);
+			printf("<%s> has sent to a server\n", buffer);
 			send(client_socket.socket_fd, buffer, strlen(buffer), 0);
 		}
 		else
