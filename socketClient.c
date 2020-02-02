@@ -53,9 +53,10 @@ void		send_msg_handler()
 		is_send = 0;
 		words = ft_strsplit(buffer, ' ');
 		param_count = ft_count_items_strlist(words);
-		is_send = (param_count == 3) &&
+		is_send = ((param_count == 2) && !strcmp(buffer, "export seq")) ||
+					((param_count == 3) &&
 					ft_str_in_list(words[0], instructions) &&
-					(atoi(words[1]) != 0) && (atoi(words[2]) != 0);
+					(atoi(words[1]) != 0) && (atoi(words[2]) != 0));
 		if (is_send)
 		{
 			printf("Has sent <%s>\n", buffer);
@@ -81,17 +82,6 @@ int			main(int gc, char **gv)
 	client_socket.ip = gv[1];
 	client_socket.port = atoi(gv[2]);
 	signal(SIGINT, catch_ctrl_c_exit);
-/*	block about name of client
-	printf("Enter your name: ");
-	fgets(client_socket.name, NAME_LEN, stdin);
-	ft_str_trim_eol(client_socket.name, sizeof(client_socket.name));
-	if (strlen(client_socket.name) < 2 || strlen(client_socket.name) > NAME_LEN - 1)
-	{
-		printf("ERROR: name is incorret\n");
-		return EXIT_FAILURE;
-	}
-*/
-	// create a socket
 	client_socket.socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (client_socket.socket_fd < 0)
 	{
@@ -109,9 +99,6 @@ int			main(int gc, char **gv)
 		printf("ERROR: in connection\n");
 		return EXIT_FAILURE;
 	}
-/*	block about name of client
-	send(client_socket.socket_fd, client_socket.name, NAME_LEN, 0);
-*/
 	printf("Connected to server %s is established\n", gv[1]);
 
 	if (pthread_create(&(client_socket.send_msg_thread), NULL, (void *)send_msg_handler, NULL) != 0)
@@ -134,7 +121,6 @@ int			main(int gc, char **gv)
 			break ;
 		}
 	}
-
 	close(client_socket.socket_fd);
 
 	return (0);

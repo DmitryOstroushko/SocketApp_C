@@ -1,4 +1,3 @@
-
 #include "socket.h"
 
 static _Atomic unsigned int client_count = 0;
@@ -9,7 +8,6 @@ pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 void		*server_handle_client(void *arg)
 {
 	char			buffer[BUF_SIZE];
-//	char			name[NAME_LEN];
 	int				to_finish;
 	t_client_socket *client;
 	char			**words;
@@ -17,21 +15,6 @@ void		*server_handle_client(void *arg)
 	to_finish = 0;
 	client_count++;
 	client = (t_client_socket *)arg;
-/* a block about client name
-	if (recv(client->socket_fd, name, NAME_LEN, 0) <= 0 ||
-		strlen(name) < 2 || strlen(name) >= NAME_LEN - 1)
-	{
-		printf("ERROR: type the name correctly\n");
-		to_finish = 1;
-	}
-	else
-	{
-		strcpy(client->name, name);
-		sprintf(buffer, "%s has joined to the server\n", client->name);
-		printf("%s", buffer);
-		server_send_msg(buffer, client->id);
-	}
-*/
 	bzero(buffer, BUF_SIZE);
 	while (1)
 	{
@@ -41,23 +24,22 @@ void		*server_handle_client(void *arg)
 		if (recieve > 0)
 		{
 			words = ft_strsplit(buffer, ' ');
-			printf("Has recieved <%s %s %s> from ", words[0], words[1], words[2]);
-			ip_address_print(client->address);
-			printf(" #%d.", client->id);
-			ft_str_overwrite_stdout();
-			server_add_seq_to_cleint(client, words);
-			server_send_msg(buffer, client->id);
-			ft_str_trim_eol(buffer, strlen(buffer));
-			ft_strlist_del(words);
-//			printf("%s -> %s", buffer, client->name);
+			if (ft_count_items_strlist(words) == 3)
+			{
+				printf("Has recieved <%s %s %s> from ", words[0], words[1], words[2]);
+				ip_address_print(client->address);
+				printf(".\n");
+				ft_str_overwrite_stdout();
+				server_add_seq_to_cleint(client, words);
+				ft_strlist_del(words);
+			}
+			else
+				server_send_msg(client);
 		}
 		else if (recieve == 0)
 		{
 			ip_address_print(client->address);
 			printf(" #%d has disconnected from the server.\n", client->id);
-//			sprintf(buffer, "%s has disconnected from the server\n", client->address.sin_addr);
-//			printf("%s\n", buffer);
-			server_send_msg(buffer, client->id);
 			to_finish = 1;
 		}
 		else
@@ -92,7 +74,6 @@ int			main(int gc, char **gv)
 	server = (t_server_socket *)malloc(sizeof(t_server_socket));
 	server_options_fill(server, gv[1]);
 	signal(SIGPIPE, SIG_IGN);
-//	sigaction(SIGPIPE, SIG_IGN);
 
 	if (setsockopt(server->listen_fd,
 					SOL_SOCKET, (SO_REUSEPORT | SO_REUSEADDR),
@@ -138,6 +119,9 @@ int			main(int gc, char **gv)
 		client->socket_fd = connect_fd;
 		client->id = uid++;
 		server_queue_add(client);
+		printf("Client ");
+		ip_address_print(client->address);
+		printf(" #%d is connected.\n", client->id);
 		pthread_create(&thread_id, NULL, &server_handle_client, (void *)client);
 
 		sleep(1);

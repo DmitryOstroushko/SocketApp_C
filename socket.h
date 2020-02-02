@@ -14,6 +14,7 @@
 # include <errno.h>
 # include <string.h>
 # include <signal.h>
+# include <limits.h>
 
 extern pthread_mutex_t	clients_mutex;
 
@@ -24,8 +25,9 @@ extern pthread_mutex_t	clients_mutex;
 typedef struct 		s_seq
 {
 	char			seq_name[4];
-	unsigned long	n_current;
-	unsigned long	step;
+	long			n_start;
+	long			n_current;
+	long			step;
 }					t_seq;
 
 typedef struct		s_server_socket
@@ -66,14 +68,17 @@ void		ret_error(char *msg);
 void		server_options_fill(t_server_socket *socket, char *port);
 void		server_queue_add(t_client_socket *client);
 void		server_queue_remove(int client_id);
-void		server_send_msg(char *msg, int client_id);
+void		server_send_msg(t_client_socket *client);
 void		*server_handle_client(void *arg);
 void		server_add_seq_to_cleint(t_client_socket *client, char **words);
+void		server_client_print(t_client_socket *client);
 
 void		ip_address_print(struct sockaddr_in address);
 
 void		ft_str_overwrite_stdout(void);
 void		ft_str_trim_eol(char *s, int l);
+void		ft_strdel(char **as);
+void		ft_memdel(void **ap);
 char		**ft_strsplit(char const *s, char c);
 void		ft_strlist_del(char **words);
 char		*ft_strsub(char const *s, unsigned int start, size_t len);

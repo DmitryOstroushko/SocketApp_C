@@ -59,3 +59,18 @@ int			ft_count_items_strlist(char **words)
 		count++;
 	return count;
 }
+
+void		ft_strdel(char **as)
+{
+	if (as && *as)
+		ft_memdel((void **)as);
+}
+
+void		ft_memdel(void **ap)
+{
+	if (ap)
+	{
+		free(*ap);
+		*ap = NULL;
+	}
+}
