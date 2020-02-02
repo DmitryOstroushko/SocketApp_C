@@ -63,7 +63,12 @@ void		*server_handle_client(void *arg);
 
 void		ip_address_print(struct sockaddr_in address);
 
-void		str_overwrite_stdout(void);
-void		str_trim_eol(char *s, int l);
+void		ft_str_overwrite_stdout(void);
+void		ft_str_trim_eol(char *s, int l);
+char		**ft_strsplit(char const *s, char c);
+void		ft_strlist_del(char **words);
+char		*ft_strsub(char const *s, unsigned int start, size_t len);
+int			ft_str_in_list(char *word, char **instructions);
+int			ft_count_items_strlist(char **words);
 
 #endif

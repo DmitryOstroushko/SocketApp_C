@@ -39,7 +39,7 @@ void		*server_handle_client(void *arg)
 		if (recieve > 0)
 		{
 			server_send_msg(buffer, client->id);
-			str_trim_eol(buffer, strlen(buffer));
+			ft_str_trim_eol(buffer, strlen(buffer));
 			printf("%s -> %s", buffer, client->name);
 		}
 		else if (recieve == 0 || !strcmp(buffer, "exit"))
