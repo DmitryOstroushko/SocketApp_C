@@ -34,7 +34,8 @@ void		*server_handle_client(void *arg)
 				ft_strlist_del(words);
 			}
 			else
-				server_send_msg(client);
+				client->is_send = 1;
+			server_send_msg();
 		}
 		else if (recieve == 0)
 		{
@@ -108,7 +109,7 @@ int			main(int gc, char **gv)
 					&clilen);
 		if (client_count + 1 == MAX_CLIENTS)
 		{
-			printf("Maximum clians are connected. The connection is rejected.\n");
+			printf("Maximum clients are connected. The connection is rejected.\n");
 			ip_address_print(client_address);
 			close(connect_fd);
 			continue;

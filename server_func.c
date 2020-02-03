@@ -19,6 +19,7 @@ void		server_queue_add(t_client_socket *client)
 		if (!clients[idx])
 		{
 			clients[idx] = client;
+			clients[idx]->is_send = 0;
 			for (int jdx = 0; jdx < 3; jdx++)
 				bzero(clients[idx]->seq[jdx].seq_name, 4);
 			break ;
@@ -41,33 +42,37 @@ void		server_queue_remove(int client_id)
 	pthread_mutex_unlock(&clients_mutex);
 }
 
-void		server_send_msg(t_client_socket *client)
+void		server_send_msg(void)
 {
 	char	msg[BUF_SIZE];
-	int		is_break;
+	int		is_send;
 
 	pthread_mutex_lock(&clients_mutex);
-	for (int idx = 0; idx < MAX_CLIENTS; idx++)
+
+	is_send = 1;
+	while (is_send)
 	{
-		if (clients[idx] && clients[idx]->id == client->id)
+		is_send = 0;
+		for (int idx = 0; idx < MAX_CLIENTS; idx++)
 		{
-			is_break = 0;
-			while (!is_break)
+			if (clients[idx] && clients[idx]->is_send)
 			{
+				is_send++;
 				bzero(msg, BUF_SIZE);
 				for (int jdx = 0; jdx < 3; jdx++)
 				{
-					if (strlen(client->seq[jdx].seq_name))
+					if (strlen(clients[idx]->seq[jdx].seq_name) > 0)
 					{
-						snprintf(msg, BUF_SIZE, "%s %ld ", msg, client->seq[jdx].n_current);
+						snprintf(msg, BUF_SIZE, "%s %ld ", msg, clients[idx]->seq[jdx].n_current);
 						if (write(clients[idx]->socket_fd, msg, strlen(msg)) < 0)
 						{
 							printf("ERROR: failed writing to descriptor\n");
-							is_break = 1;
+							clients[idx]->is_send = 0;
+							is_send--;
 							break ;
 						}
-						client->seq[jdx].n_current = (client->seq[jdx].n_current + client->seq[jdx].step > LONG_MAX) ?
-							client->seq[jdx].n_start : client->seq[jdx].n_current + client->seq[jdx].step;
+						clients[idx]->seq[jdx].n_current = (clients[idx]->seq[jdx].n_current + clients[idx]->seq[jdx].step > LONG_MAX) ?
+							clients[idx]->seq[jdx].n_start : clients[idx]->seq[jdx].n_current + clients[idx]->seq[jdx].step;
 					}
 				}
 			}

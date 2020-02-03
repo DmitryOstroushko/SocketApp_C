@@ -44,6 +44,7 @@ typedef struct		s_client_socket
 	int				id;
 	int				socket_fd;
 	char			name[NAME_LEN];
+	int				is_send;
 	t_seq			seq[3];
 	struct sockaddr_in	address;
 }					t_client_socket;
@@ -68,7 +69,7 @@ void		ret_error(char *msg);
 void		server_options_fill(t_server_socket *socket, char *port);
 void		server_queue_add(t_client_socket *client);
 void		server_queue_remove(int client_id);
-void		server_send_msg(t_client_socket *client);
+void		server_send_msg(void);
 void		*server_handle_client(void *arg);
 void		server_add_seq_to_cleint(t_client_socket *client, char **words);
 void		server_client_print(t_client_socket *client);
