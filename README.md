@@ -6,6 +6,6 @@ The server part generates a sequence of numbers consisting of subsequences (a su
 A generated sequence is sent to a client.
 
 ## 
-[Makefile](https://github.com/DmitryOstroushko/SocketApplication/blob/master/Makefile) makes two programs: server and client:  
+[Makefile](https://github.com/DmitryOstroushko/SocketApplication/blob/master/Makefile) creates two programs: `server` and `client`:  
 - to launch a server you should input a port (usage is presented), example: ./server 4444
 - to launch a server you should input IP address of a server and a port, divided by space (usage is presented), example: ./client 127.0.0.1 4444
