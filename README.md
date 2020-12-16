@@ -1,7 +1,7 @@
-# SocketApp_C
+# Socket Application
 
-A console client-server multi-threading application for Linux
-A server part generates a sequence of number sconsisting of subsequences (a subsequence is set by a client).
+A console client-server multi-threading application for Linux. There are two parts in the application: a server and a client.   
+The server part generates a sequence of numbers consisting of subsequences (a subsequence is set by a client).
 A generated sequence is sent to a client.
 
 Makefile makes two programs: server and client:
