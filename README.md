@@ -8,5 +8,6 @@ The output stream of client is printing to a console.
 
 ## How it works
 [Makefile](https://github.com/DmitryOstroushko/SocketApplication/blob/master/Makefile) creates two programs: `server` and `client`.  
+A server program and a client program interconnect using sockets technology.  
 To launch a server you should input a port (usage is presented), example: `./server 4444`.  
 To launch a client you should input IP address of a server and a port, divided by space (usage is presented), example: `./client 127.0.0.1 4444`.  
