@@ -1,6 +1,6 @@
 # Socket Application
 
-## General idea
+## About project
 A console client-server multi-threading application for Linux. There are two parts in the application: a server and a client.   
 The server part generates a sequence of numbers consisting of subsequences (a subsequence is set by a client).
 A generated sequence is sent to the client. The client processes an input subsequence and combines it with the clients' output stream.
